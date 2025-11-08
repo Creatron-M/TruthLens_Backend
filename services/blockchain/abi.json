@@ -1,0 +1,27 @@
+[
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "marketId", "type": "bytes32" },
+      { "internalType": "uint8", "name": "credScore", "type": "uint8" },
+      { "internalType": "uint8", "name": "riskIndex", "type": "uint8" },
+      { "internalType": "string", "name": "metaURI", "type": "string" }
+    ],
+    "name": "submitAttestation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "name": "latest",
+    "outputs": [
+      { "internalType": "uint8", "name": "credScore", "type": "uint8" },
+      { "internalType": "uint8", "name": "riskIndex", "type": "uint8" },
+      { "internalType": "string", "name": "metaURI", "type": "string" },
+      { "internalType": "address", "name": "signer", "type": "address" },
+      { "internalType": "uint64", "name": "timestamp", "type": "uint64" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
