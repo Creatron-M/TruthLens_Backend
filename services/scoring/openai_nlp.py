@@ -366,6 +366,9 @@ def analyze_question(question: str) -> dict:
     
     try:
         print("🚀 Calling OpenAI API...")
+        print(f"📡 Using API Key: {client.api_key[:20]}...{client.api_key[-4:] if len(client.api_key) > 24 else 'short_key'}")
+        print(f"🎯 Model: gpt-3.5-turbo | Max Tokens: 400 | Temperature: 0.3")
+        
         prompt = f"""
 Analyze this cryptocurrency/market question for credibility and risk assessment:
 
@@ -387,6 +390,9 @@ Consider:
 Format as valid JSON only.
 """
 
+        print(f"📝 Prompt length: {len(prompt)} characters")
+        print("⏳ Sending request to OpenAI...")
+        
         # For MVP: Use faster gpt-3.5-turbo instead of gpt-4 to reduce latency
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",  # Faster than gpt-4
@@ -400,7 +406,24 @@ Format as valid JSON only.
         )
         
         print("✅ OpenAI API call completed successfully")
-        result = json.loads(response.choices[0].message.content)
+        print(f"📊 Response tokens used: {response.usage.total_tokens if hasattr(response, 'usage') else 'unknown'}")
+        print(f"💰 Estimated cost: ${(response.usage.total_tokens * 0.000002) if hasattr(response, 'usage') else 0:.6f}")
+        
+        raw_content = response.choices[0].message.content
+        print(f"📄 Raw response length: {len(raw_content)} characters")
+        print(f"🔍 Response preview: {raw_content[:100]}...")
+        
+        # Clean the response - remove markdown code blocks if present
+        clean_content = raw_content.strip()
+        if clean_content.startswith('```json'):
+            clean_content = clean_content[7:]  # Remove ```json
+        if clean_content.startswith('```'):
+            clean_content = clean_content[3:]   # Remove ```
+        if clean_content.endswith('```'):
+            clean_content = clean_content[:-3]  # Remove trailing ```
+        clean_content = clean_content.strip()
+        
+        result = json.loads(clean_content)
         
         final_result = {
             'analysis': result.get('analysis', 'Analysis completed successfully.'),
